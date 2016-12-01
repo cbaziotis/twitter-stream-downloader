@@ -43,7 +43,7 @@ class FileManager:
         # if buffer is "full" then write the contents to disk
         if len(self.buffer) >= self.buffer_limit:
             # execute the file write in a new thread
-            threading.Thread(target=self.write_data, args=(self.buffer,)).start()
+            threading.Thread(target=self.write_data, args=(self.buffer[:],)).start()
             self.buffer[:] = []
 
     def write_data(self, data):
@@ -51,8 +51,9 @@ class FileManager:
         Write the buffer  to the output file
         :return:
         """
-        filename = str(self.get_filename()) + ".tsv"
+        print(data)
+        filename = self.get_filename() + ".tsv"
         path = os.path.join(self.directory, filename)
-        with open(path, "a", encoding="utf-8") as f:
+        with open(path, mode="a", encoding="utf-8") as f:
             for entry in data:
                 f.write("\t".join(entry) + "\n")
