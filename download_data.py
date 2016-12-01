@@ -4,7 +4,7 @@ from tweepy import Stream
 from Listener import Listener
 
 SETTINGS_FILE = "settings.txt"
-api_keys_missing = Exception("Twitter API Keys missing! Please fill the API key values in settings.txt...")
+api_keys_missing = Exception("Twitter API Keys missing! Please fill the API key values in settings.txt ...")
 
 
 def import_settings():
