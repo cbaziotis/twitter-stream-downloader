@@ -51,7 +51,6 @@ class FileManager:
         Write the buffer  to the output file
         :return:
         """
-        print(data)
         filename = self.get_filename() + ".tsv"
         path = os.path.join(self.directory, filename)
         with open(path, mode="a", encoding="utf-8") as f:
