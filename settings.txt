@@ -1,0 +1,14 @@
+# the name of the folder where the twitter data will be saved
+output_folder=dump
+
+# filter languages. leave empty for no filtering. the lang codes must be comma separated
+languages=en
+
+# save retweets or not
+rt=True
+
+# twitter API keys
+consumer_key=
+consumer_secret=
+access_token=
+access_token_secret=
