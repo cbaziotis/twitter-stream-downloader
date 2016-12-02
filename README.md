@@ -77,11 +77,11 @@ then you have the option to save just that with the `--only-text` parameter:
 ```
 >python twsd.py --only-text 
 ```
-This way you save a lot of space (the biggest part of the tweet object is metadata, 
-and the text itself is only a small percentage of it), and the unnecessary json parsing (saving a lot of time
+This way you save space (the biggest part of the tweet object is metadata, 
+and the text itself is only a small percentage of it), and the unnecessary json parsing (saving time
 during the processing of the dataset).
 
-In this , each row in the file contains the `tweet_id` with the `text` (tab separated). 
+In this case, each row in the file contains the `tweet_id` with the `text` (tab separated). 
 The `tweet_id` will be useful for deduplication, if you want to merge datasets.
 
 ---
