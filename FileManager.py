@@ -13,7 +13,7 @@ class FileManager:
 
         # the size of the buffer.
         # if the buffer reaches it's limit then it's contents will be written to disk
-        self.buffer_limit = 150
+        self.buffer_limit = 100
 
         self.init_check()
 
