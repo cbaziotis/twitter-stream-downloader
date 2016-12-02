@@ -1,24 +1,24 @@
-
+import ujson as json
 from sys import stdout
 
 from tweepy import StreamListener
 
 from EventLogger import EventLogger
 from FileManager import FileManager
-import ujson as json
 
 
 class Listener(StreamListener):
-    """ A listener handles tweets that are received from the stream.
-    This is a basic listener that just prints received tweets to stdout.
+    """
+    A listener handles tweets that are received from the stream.
     """
 
-    def __init__(self,  output, languages, rt, api=None, ):
+    def __init__(self, output, languages, save_full, rt, api=None, ):
         super().__init__(api)
-        self.roe = EventLogger("tweets")
-        self.fm = FileManager(output)
+        self.logger = EventLogger("tweets")
+        self.fmanager = FileManager(output, with_id=not save_full)
         self.languages = languages
-        self.rt = rt
+        self.save_full = save_full
+        self.keep_rt = rt
         print("Downloading...")
 
     @staticmethod
@@ -28,24 +28,29 @@ class Listener(StreamListener):
 
     def on_data(self, data):
         tweet = json.loads(data)
-        skip_rt = not self.rt and tweet['text'].startswith("RT")
-        if 'text' in tweet and not skip_rt:
 
-            tweet_id = tweet['id_str']
+        # 1 - Check if there is text in the tweet
+        if 'text' not in tweet:
+            return True
 
-            # if the text is longer than 140 chars check if there is available the full_text
-            if 'extended_tweet' in tweet and 'full_text' in tweet['extended_tweet']:
-                text = tweet['extended_tweet']['full_text']
+        # 2 - Check whether to keep the tweet if it is a retweet
+        if self.keep_rt or (not self.keep_rt and not tweet['text'].startswith("RT")):
+
+            # 3 - Check whether to save all the tweet or only the text
+            if self.save_full:
+                self.fmanager.add_entry(data=data)
             else:
-                text = tweet['text']
+                # if the text is longer than 140 chars check if there is available the full_text
+                if 'extended_tweet' in tweet and 'full_text' in tweet['extended_tweet']:
+                    text = tweet['extended_tweet']['full_text']
+                else:
+                    text = tweet['text']
 
-            text = self.fix_text(text)
-            # print(text)
+                self.fmanager.add_entry(tweet['id_str'], self.fix_text(text))
 
-            self.fm.add_entry(tweet_id, text)
+            self.logger.new_event()
 
-            self.roe.new_event()
-            stdout.write("\r" + self.roe.print_status())
+            stdout.write("\r" + self.logger.print_status())
             stdout.flush()
         return True
 

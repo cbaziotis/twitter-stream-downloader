@@ -1,17 +1,21 @@
-import os
 import datetime
+import os
 import threading
 
 
 class FileManager:
-    def __init__(self, directory="dump"):
+    def __init__(self, directory="dump", with_id=True):
         self.directory = directory
-        self.init_check()
+
+        # whether to save the tweet_id with data or not, useful for deduplication
+        self.with_id = with_id
         self.buffer = []
 
         # the size of the buffer.
         # if the buffer reaches it's limit then it's contents will be written to disk
-        self.buffer_limit = 50
+        self.buffer_limit = 150
+
+        self.init_check()
 
     @staticmethod
     def assure_path_exists(path):
@@ -31,20 +35,23 @@ class FileManager:
         """
         self.assure_path_exists(self.directory)
 
-    def add_entry(self, _id, text):
+    def add_entry(self, _id=None, data=None):
         """
         Add a new entry in the output file
         :param _id:
-        :param text:
+        :param data:
         :return:
         """
-        self.buffer.append((_id, text))
+        if self.with_id:
+            self.buffer.append((_id, data))
+        else:
+            self.buffer.append(data)
 
         # if buffer is "full" then write the contents to disk
         if len(self.buffer) >= self.buffer_limit:
             # execute the file write in a new thread
-            threading.Thread(target=self.write_data, args=(self.buffer[:],)).start()
-            self.buffer[:] = []
+            threading.Thread(daemon=True, target=self.write_data, args=(self.buffer[:],)).start()
+            self.buffer[:] = []  # empty the buffer
 
     def write_data(self, data):
         """
@@ -54,5 +61,9 @@ class FileManager:
         filename = self.get_filename() + ".tsv"
         path = os.path.join(self.directory, filename)
         with open(path, mode="a", encoding="utf-8") as f:
-            for entry in data:
-                f.write("\t".join(entry) + "\n")
+            if self.with_id:
+                for entry in data:
+                    f.write("\t".join(entry) + "\n")
+            else:
+                for entry in data:
+                    f.write(entry.rstrip() + "\n")

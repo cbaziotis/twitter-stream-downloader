@@ -1,4 +1,3 @@
-
 import datetime as dt
 
 
@@ -38,7 +37,10 @@ class EventLogger:
             self.diffs = self.diffs[-self.rate_sample_size:]
 
     def get_rate(self):
-        return len(self.diffs) / sum(self.diffs)
+        try:
+            return len(self.diffs) / sum(self.diffs)
+        except:
+            return 0
 
     def get_total(self):
         return self.total
