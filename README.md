@@ -26,8 +26,25 @@ access_token_secret=ENTER_YOUR_ACCESS_TOKEN_SECRET
 
 ```
 
-### Settings
-You can set the settings in `settings.txt`.
+### Parameters - command-line arguments
+You can decide what data you want to save, by setting the following parameters:
+
+```
+>python twsd.py -h
+usage: twsd.py [-h] [--lang [LANG]] [--output [OUTPUT]] [--no-rt]
+               [--only-text]
+
+optional arguments:
+  -h, --help         show this help message and exit
+  --lang [LANG]      filter languages. defaults to no filtering. the lang
+                     codes must be comma separated.
+  --output [OUTPUT]  the name of the folder where the twitter data will be
+                     saved.
+  --no-rt            dont't save retweets.
+  --only-text        keep only the text
+
+```
+
 
 ####Languages
 Select the language or languages of the tweets that you want to save, using the [corresponding language codes](https://dev.twitter.com/web/overview/languages). 
@@ -36,25 +53,43 @@ The values have to be comma separated.
 
 For example, to save only Greek and English tweets:
 ```
-languages=el,en
+>python twsd.py --lang=el,en
 ```
-####Keep Retweets or not
-You can decide whether to save retweets or not. A reason to decide not to, is that a tweet may be retweeted many times and this will skew the statistics of the dataset.
 
-The default value is `True`:
-```
-rt=True
-```
 ####Output folder
 You can set the name of the output folder:
 ```
-output_folder=dump
+>python twsd.py --output=myfolder
 ```
+
+
+####Keep Retweets or not
+You can decide whether to save retweets or not. A reason to decide not to, is that a tweet may be retweeted many times and this will skew the statistics of the dataset.
+
+The default behavior is to save the retweets. To not save them just add the `--no-rt` parameter:
+```
+>python twsd.py --no-rt
+```
+
+####Only Text
+If what you are interested in is only the message of the tweet, 
+then you have the option to save just that with the `--only-text` parameter:
+```
+>python twsd.py --only-text 
+```
+This way you save a lot of space (the biggest part of the tweet object is metadata, 
+and the text itself is only a small percentage of it), and the unnecessary json parsing (saving a lot of time
+during the processing of the dataset).
+
+In this , each row in the file contains the `tweet_id` with the `text` (tab separated). 
+The `tweet_id` will be useful for deduplication, if you want to merge datasets.
+
 ---
 ##Execution
-Run the service by executing the `download_data.py` script. The service prints some useful information about it's progress.
+Run the service by executing the `twsd.py` script. The service prints some useful information about it's progress. 
+Here is an example where we start downloading only the text of English tweets without keeping the retweets.
 ```
-> python download_data.py
+>python twsd.py --lang=en --no-rt  --only-text
 Downloading...
-Total:   150     Rate: 13.48 tweets/sec          time: 0:00:19
+Total:   104     Rate: 19.54 tweets/sec          time: 0:00:11
 ```
