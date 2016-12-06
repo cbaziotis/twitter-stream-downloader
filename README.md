@@ -1,5 +1,5 @@
 # twitter-stream-downloader
-A very simple service for downloading twitter streaming data (just text for now). Intended for research purposes.
+A very simple service for downloading twitter streaming data.
 The service also takes advantage of the recent changes in Twitter API, by also saving tweets longer than 140 chars (`"tweet_mode" = "extended"`).
 ### install requirements
 
