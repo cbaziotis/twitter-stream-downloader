@@ -46,13 +46,13 @@ optional arguments:
   --only-text           keep only the text. 
 
 ```
-####Storage
+#### Storage
 You have two options for saving the twitter data, (1) on disk in text files, or (2) in a database (MongoDB).
 ```
 $ python twsd/main.py --storage db
 ```
 
-####Languages
+#### Languages
 Select the language or languages of the tweets that you want to save, using the [corresponding language codes](https://dev.twitter.com/web/overview/languages). 
 Leave empty for all languages. 
 The values have to be comma separated.
@@ -63,7 +63,7 @@ $ python twsd/main.py --lang=el,en
 ```
 
 
-####Keep Retweets or not
+#### Omit Retweets
 You can decide whether to save retweets or not. A reason to decide not to, is that a tweet may be retweeted many times and this will skew the statistics of the dataset.
 
 The default behavior is to save the retweets. To not save them just add the `--omit-rt` parameter:
@@ -71,7 +71,7 @@ The default behavior is to save the retweets. To not save them just add the `--o
 $ python twsd/main.py --omit-rt
 ```
 
-####Only Text
+#### Only Text
 If what you are interested in is only the message of the tweet, then you have the option to save just that with the `--only-text` parameter:
 ```
 $ python twsd/main.py --only-text 
@@ -79,7 +79,7 @@ $ python twsd/main.py --only-text
 This way you save space (the biggest part of the tweet object is metadata, and the text itself is only a small percentage of it), and the unnecessary json parsing (saving time during the processing of the dataset). Each row in the file contains the `tweet_id` with the `text` (tab separated). The `tweet_id` will be useful for deduplication, if you want to merge datasets.
 
 ---
-##Execution
+## Execution
 Run the service by executing the `twsd/main.py` script. The service prints some useful information about it's progress. 
 Here is an example where we start downloading only the text of English tweets without keeping the retweets.
 ```
