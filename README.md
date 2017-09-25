@@ -15,7 +15,7 @@ The service needs to have access to Twitter’s APIs and in order to do so, it n
 2. Go to <https://apps.twitter.com/> and log in with your Twitter user account, and create a new App.
 3. Then in your App's page, click on “Keys and Access Tokens” tab, and copy your “API key” and “API secret”. 
 Scroll down and click “Create my access token”, and copy your “Access token” and “Access token secret”.
-4. Paste the API keys in `settings.txt` file.
+4. Paste the API keys in `settings.txt` file and place it in `twsd/settings.txt`.
 
 ```
 # twitter API keys
@@ -23,7 +23,6 @@ consumer_key=ENTER_YOUR_CONSUMER_KEY
 consumer_secret=ENTER_YOUR_CONSUMER_SECRET_KEY
 access_token=ENTER_YOUR_ACCESS_TOKEN
 access_token_secret=ENTER_YOUR_ACCESS_TOKEN_SECRET
-
 ```
 
 ### Parameters - command-line arguments
