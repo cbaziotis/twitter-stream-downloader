@@ -53,5 +53,8 @@ class EventLogger:
         return self.human_format_number(self.total)
 
     def print_status(self):
-        return "Total: %5s \t Rate: %5.2f %s/sec \t time: %s" % (
-            self.total, self.get_rate(), self.event_name, self.get_total_time())
+        message = "Total: %5s \t Rate: %5.2f %s/sec \t time: %s"
+        return message % (self.total,
+                          self.get_rate(),
+                          self.event_name,
+                          self.get_total_time())

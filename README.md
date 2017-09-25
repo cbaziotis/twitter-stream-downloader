@@ -29,22 +29,29 @@ access_token_secret=ENTER_YOUR_ACCESS_TOKEN_SECRET
 ### Parameters - command-line arguments
 You can decide what data you want to save, by setting the following parameters:
 
-```
->python twsd.py -h
-usage: twsd.py [-h] [--lang [LANG]] [--output [OUTPUT]] [--no-rt]
+```shell
+$ python twsd/main.py -h
+usage: main.py [-h] [--lang [LANG]] [--storage [{text,db}]] [--omit-rt]
                [--only-text]
 
+twitter stream downloader
+
 optional arguments:
-  -h, --help         show this help message and exit
-  --lang [LANG]      filter languages. defaults to no filtering. the lang
-                     codes must be comma separated.
-  --output [OUTPUT]  the name of the folder where the twitter data will be
-                     saved.
-  --no-rt            dont't save retweets.
-  --only-text        keep only the text
+  -h, --help            show this help message and exit
+  --lang [LANG]         filter languages. defaults to no filtering. the lang codes must be comma separated.
+  --storage [{text,db}]
+                        the type of storage.
+                        - Set to "text" for saving the tweets in text files.
+                        - Set to "db" for saving the tweets in a MongoDB database.
+  --omit-rt             omit retweets
+  --only-text           keep only the text. 
 
 ```
-
+####Storage
+You have two options for saving the twitter data, (1) on disk in text files, or (2) in a database (MongoDB).
+```
+$ python twsd/main.py --storage db
+```
 
 ####Languages
 Select the language or languages of the tweets that you want to save, using the [corresponding language codes](https://dev.twitter.com/web/overview/languages). 
@@ -53,43 +60,31 @@ The values have to be comma separated.
 
 For example, to save only Greek and English tweets:
 ```
->python twsd.py --lang=el,en
-```
-
-####Output folder
-You can set the name of the output folder:
-```
->python twsd.py --output=myfolder
+$ python twsd/main.py --lang=el,en
 ```
 
 
 ####Keep Retweets or not
 You can decide whether to save retweets or not. A reason to decide not to, is that a tweet may be retweeted many times and this will skew the statistics of the dataset.
 
-The default behavior is to save the retweets. To not save them just add the `--no-rt` parameter:
+The default behavior is to save the retweets. To not save them just add the `--omit-rt` parameter:
 ```
->python twsd.py --no-rt
+$ python twsd/main.py --omit-rt
 ```
 
 ####Only Text
-If what you are interested in is only the message of the tweet, 
-then you have the option to save just that with the `--only-text` parameter:
+If what you are interested in is only the message of the tweet, then you have the option to save just that with the `--only-text` parameter:
 ```
->python twsd.py --only-text 
+$ python twsd/main.py --only-text 
 ```
-This way you save space (the biggest part of the tweet object is metadata, 
-and the text itself is only a small percentage of it), and the unnecessary json parsing (saving time
-during the processing of the dataset).
-
-In this case, each row in the file contains the `tweet_id` with the `text` (tab separated). 
-The `tweet_id` will be useful for deduplication, if you want to merge datasets.
+This way you save space (the biggest part of the tweet object is metadata, and the text itself is only a small percentage of it), and the unnecessary json parsing (saving time during the processing of the dataset). Each row in the file contains the `tweet_id` with the `text` (tab separated). The `tweet_id` will be useful for deduplication, if you want to merge datasets.
 
 ---
 ##Execution
-Run the service by executing the `twsd.py` script. The service prints some useful information about it's progress. 
+Run the service by executing the `twsd/main.py` script. The service prints some useful information about it's progress. 
 Here is an example where we start downloading only the text of English tweets without keeping the retweets.
 ```
->python twsd.py --lang=en --no-rt  --only-text
+$ python twsd/main.py --lang=en --no-rt  --only-text
 Downloading...
 Total:   104     Rate: 19.54 tweets/sec          time: 0:00:11
 ```
