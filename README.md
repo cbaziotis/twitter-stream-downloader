@@ -83,7 +83,7 @@ This way you save space (the biggest part of the tweet object is metadata, and t
 Run the service by executing the `twsd/main.py` script. The service prints some useful information about it's progress. 
 Here is an example where we start downloading only the text of English tweets without keeping the retweets.
 ```
-$ python twsd/main.py --lang=en --no-rt  --only-text
+$ python twsd/main.py --lang=en --omit-rt  --only-text
 Downloading...
 Total:   104     Rate: 19.54 tweets/sec          time: 0:00:11
 ```
